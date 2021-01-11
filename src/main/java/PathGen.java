@@ -41,6 +41,7 @@ public class PathGen {
 
     public ArrayList<double[]> drawPath(List<MatOfPoint> contours, int r, Mat hirarchy){
         ArrayList<double[]> path = new ArrayList<>();
+        path.add(new double[]{0, 0, 0});
         for (MatOfPoint contour: contours){
             path.addAll(contour.toList().stream().map(p -> new double[] {p.x, p.y, 1}).collect(Collectors.toList()));
             path.add(new double[]{0, 0, 0});
@@ -83,7 +84,7 @@ public class PathGen {
         return path;
     }
 
-    public static Mat imageToMat(Image image) {
+    public Mat imageToMat(Image image) {
         int width = (int) image.getWidth();
         int height = (int) image.getHeight();
         byte[] buffer = new byte[width * height * 4];
@@ -97,7 +98,7 @@ public class PathGen {
         return mat;
     }
 
-    private Image mat2Image(Mat src)
+    public Image mat2Image(Mat src)
     {
         MatOfByte buffer = new MatOfByte();
         // encode the frame in the buffer, according to the PNG format
