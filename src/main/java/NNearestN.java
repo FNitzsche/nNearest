@@ -1,3 +1,5 @@
+import sun.swing.StringUIClientPropertyKey;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -14,7 +16,9 @@ public class NNearestN {
 
         if (hue){
             System.out.println("only Hue");
-            pixel = hueNormalize(pixel, resX, resY);
+            pixel = hueNormalizeOrExpand(pixel, resX, resY, true);
+        } else {
+            pixel = hueNormalizeOrExpand(pixel, resX, resY, false);
         }
 
 
@@ -72,9 +76,7 @@ public class NNearestN {
                         nextCenters[nearest][3] += (x/(float)resX);
                         nextCenters[nearest][4] += (y/(float)resY);
                         nextCenters[nearest][5]++;
-                        if (hue){
-                            pixel[x][y][4] = nearest;
-                        }
+                        pixel[x][y][4] = nearest;
                     }
                 }
             }
@@ -139,16 +141,22 @@ public class NNearestN {
         return (float) Math.sqrt(Math.pow(rC-r, 2) + Math.pow(gC-g, 2) + Math.pow(bC-b, 2) + Math.pow(xC-x, 2)*space + Math.pow(yC-y, 2)*space);
     }
 
-    public static float[][][] hueNormalize(float[][][] pixel, int resX, int resY){
+    public static float[][][] hueNormalizeOrExpand(float[][][] pixel, int resX, int resY, boolean norm){
 
         float[][][] nPixel = new float[resX][resY][5];
         for (int i = 0; i < resX; i ++){
             for (int j = 0; j < resY; j++){
                 if (pixel[i][j][0]+pixel[i][j][1]+pixel[i][j][2] > 0) {
                     float length = (float) Math.sqrt(Math.pow(pixel[i][j][0], 2) + Math.pow(pixel[i][j][1], 2) + Math.pow(pixel[i][j][2], 2));
-                    nPixel[i][j][0] = pixel[i][j][0]/length;
-                    nPixel[i][j][1] = pixel[i][j][1]/length;
-                    nPixel[i][j][2] = pixel[i][j][2]/length;
+                    if (norm) {
+                        nPixel[i][j][0] = pixel[i][j][0] / length;
+                        nPixel[i][j][1] = pixel[i][j][1] / length;
+                        nPixel[i][j][2] = pixel[i][j][2] / length;
+                    } else {
+                        nPixel[i][j][0] = pixel[i][j][0];
+                        nPixel[i][j][1] = pixel[i][j][1];
+                        nPixel[i][j][2] = pixel[i][j][2];
+                    }
                     nPixel[i][j][3] = length;
                 } else {
                     nPixel[i][j][0] = 0;

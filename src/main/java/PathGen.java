@@ -20,28 +20,26 @@ public class PathGen {
         System.loadLibrary( Core.NATIVE_LIBRARY_NAME );
     }
 
-    public Image pathGen(Image img){
-        Mat imageMatrix = imageToMat(img);
+    public ArrayList<ArrayList<double[]>> pathGen(Image[] imgs){
+        ArrayList<ArrayList<double[]>> ret = new ArrayList<>();
+        for (Image img: imgs) {
+            Mat imageMatrix = imageToMat(img);
+            Mat gray = new Mat(imageMatrix.rows(), imageMatrix.cols(), imageMatrix.type());
+            Imgproc.cvtColor(imageMatrix, gray, Imgproc.COLOR_BGR2GRAY);
+            Mat binary = new Mat(imageMatrix.rows(), imageMatrix.cols(), imageMatrix.type(), new Scalar(0));
+            Imgproc.threshold(gray, binary, 100, 255, Imgproc.THRESH_BINARY);
+            //Finding Contours
+            List<MatOfPoint> contours = new ArrayList<>();
+            Mat hirarchy = new Mat();
+            Imgproc.findContours(binary, contours, hirarchy, Imgproc.RETR_TREE,
+                    Imgproc.CHAIN_APPROX_SIMPLE);
+            ret.add(drawPath(contours, 10, hirarchy));
+        }
 
-        Mat gray = new Mat(imageMatrix.rows(), imageMatrix.cols(), imageMatrix.type());
-        Imgproc.cvtColor(imageMatrix, gray, Imgproc.COLOR_BGR2GRAY);
-        Mat binary = new Mat(imageMatrix.rows(), imageMatrix.cols(), imageMatrix.type(), new Scalar(0));
-        Imgproc.threshold(gray, binary, 100, 255, Imgproc.THRESH_BINARY);
-        //Finding Contours
-        List<MatOfPoint> contours = new ArrayList<>();
-        Mat hierarchey = new Mat();
-        Imgproc.findContours(binary, contours, hierarchey, Imgproc.RETR_TREE,
-                Imgproc.CHAIN_APPROX_SIMPLE);
-        //System.out.println(contours.get(12).toList());
-        //Drawing the Contours
-        Scalar color = new Scalar(255, 255, 255);
-        Imgproc.drawContours(imageMatrix, contours, -1, color, 5 ) ;
-        drawPath(contours, 10);
-
-        return mat2Image(imageMatrix);
+        return ret;
     }
 
-    public ArrayList<double[]> drawPath(List<MatOfPoint> contours, int r){
+    public ArrayList<double[]> drawPath(List<MatOfPoint> contours, int r, Mat hirarchy){
         ArrayList<double[]> path = new ArrayList<>();
         for (MatOfPoint contour: contours){
             path.addAll(contour.toList().stream().map(p -> new double[] {p.x, p.y, 1}).collect(Collectors.toList()));
@@ -73,10 +71,11 @@ public class PathGen {
                         if (t >= 1){
                             path.add(new double[]{0, 0, 0});
                         } else {
-                            path.add(new double[]{p.x+(p.x-q.x)*t, p.y+(p.y-q.y)*t, 1});
+                            path.add(new double[]{q.x+(p.x-q.x)*t, q.y+(p.y-q.y)*t, 1});
                             running = true;
                         }
                     }
+                    path.add(new double[]{0, 0, 0});
                     i++;
                 }
             }
