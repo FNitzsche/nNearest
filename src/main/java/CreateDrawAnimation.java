@@ -89,16 +89,13 @@ public class CreateDrawAnimation {
             if (k < pointCount){
                 if (allPoints.get(k)[2] == 0){
                     skip = true;
-                    //limit++;
-                    continue;
-                }
-                if (skip){
+                } else if (skip){
                     lastPoint = allPoints.get(k);
                     skip = false;
-                    continue;
+                } else {
+                    Imgproc.line(mask, new Point(allPoints.get(k)[0], allPoints.get(k)[1]), new Point(lastPoint[0], lastPoint[1]), new Scalar(255), r);
+                    lastPoint = allPoints.get(k);
                 }
-                Imgproc.line(mask, new Point(allPoints.get(k)[0], allPoints.get(k)[1]), new Point(lastPoint[0], lastPoint[1]), new Scalar(255), r);
-                lastPoint = allPoints.get(k);
             }
 
             if (k%pointsPerFrame < 1){

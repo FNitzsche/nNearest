@@ -15,20 +15,23 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class AppStart extends Application {
+    public static int resX = 1980;
+    public static int resY = 1080;
+    public static int n = 30;
 
     @Override
     public void start(Stage stage) throws Exception {
 
-        Canvas canvas = new Canvas(1280, 720);
+        Canvas canvas = new Canvas(resX, resY);
         BaseImage base;// = new BaseImage("C:\\Users\\felix\\IdeaProjects\\nNearest\\src\\main\\resources\\DSC_3545.JPG", 1920, 1080);
         stage.setScene(new Scene(new HBox(canvas)));
         stage.show();
 
         //for (int i = 0; i < 30; i++) {
-            base = new BaseImage("C:\\Users\\felix\\IdeaProjects\\nNearest\\src\\main\\resources\\DSCPDC_0003_BURST20200917142311023_COVER.JPG", 1280, 720);
+            base = new BaseImage("C:\\Users\\felix\\IdeaProjects\\nNearest\\src\\main\\resources\\DSCPDC_0003_BURST20200917142311023_COVER.JPG", resX, resY);
             float[][][] imgArray = base.preSize;
             float[][] centers = null;
-            imgArray = NNearestN.cluster(imgArray, 30, 5, imgArray.length, imgArray[0].length, 0, false, 0.25f, false);
+            imgArray = NNearestN.cluster(imgArray, n, 5, imgArray.length, imgArray[0].length, 0, false, 0.25f, false);
             centers = NNearestN.lastClusters;
             Image img = drawArray(imgArray);
             canvas.getGraphicsContext2D().drawImage(img, 0, 0);
@@ -42,7 +45,7 @@ public class AppStart extends Application {
             }*/
         //}
         CreateDrawAnimation cAni = new CreateDrawAnimation();
-        cAni.saveAnimation("C:\\Users\\felix\\IdeaProjects\\nNearest\\processedImg\\", "drawing3_", imgArray, 30, 1000, 20, 1280, 720, centers, 30);
+        cAni.saveAnimation("C:\\Users\\felix\\IdeaProjects\\nNearest\\processedImg\\", "drawing3_", imgArray, n, 1000, 20, resX, resY, centers, 30);
 
     }
 
