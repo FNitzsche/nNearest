@@ -6,6 +6,7 @@ import javafx.scene.image.WritablePixelFormat;
 import javafx.scene.paint.Color;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
+import org.opencv.videoio.VideoWriter;
 
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -16,9 +17,10 @@ public class CreateDrawAnimation {
 
     PathGen pg = new PathGen();
 
-    public void saveAnimation(String savePath, String prefix, float[][][] imgArray, int n, int frameCount, int r, int resX, int resY, float[][] centers){
+    public void saveAnimation(String savePath, String prefix, float[][][] imgArray, int n, int frameCount, int r, int resX, int resY, float[][] centers, float fps){
         Image[] imgs = drawClusters(imgArray, n);
         ArrayList<ArrayList<double[]>> allPaths = pg.pathGen(imgs, r);
+        cleanPaths(allPaths, r);
         ArrayList<double[]> allPoints = new ArrayList<>();
         int pointCount = 0;
         for (ArrayList<double[]> path: allPaths){
@@ -33,46 +35,99 @@ public class CreateDrawAnimation {
         Mat img = pg.imageToMat(drawArray(imgArray));
         float pointsPerFrame = pointCount/(float)frameCount;
 
-        for (int f = 0; f < frameCount; f++){
-            int active = 0;
-            int past = 0;
-            System.out.println("Frame: " + f);
-            boolean skip = false;
-            double[] lastPoint = new double[3];
-            Mat mask = new Mat(img.rows(), img.cols(), CvType.CV_8U, Scalar.all(0));
-            float limit = f*pointsPerFrame;
-            Mat baseMask = imageToMask(imgs[0]);
-            Core.multiply(baseMask, mask, mask);
-            for (int k = 0; k < limit; k++){
-                if (k-past >= allPaths.get(active).size()){
-                    past += allPaths.get(active).size();
-                    active++;
-                    Core.multiply(baseMask, mask, mask);
-                    Core.add(baseMask, imageToMask(imgs[active]), baseMask);
-                }
-                if (k < pointCount){
-                    if (allPoints.get(k)[2] == 0){
-                        skip = true;
-                        //limit++;
-                        continue;
+        int lastFrame = frameLoop(frameCount, pointsPerFrame, img, imgs, allPaths, pointCount, allPoints, savePath, prefix, r, fps);
+
+        saveImage(savePath, prefix, lastFrame, drawArray(imgArray));
+    }
+
+    public void cleanPaths(ArrayList<ArrayList<double[]>> allPaths, float r){
+        r /= 2;
+        for (int i = 0; i < allPaths.size(); i++){
+            ArrayList<double[]> toKeep = new ArrayList<>();
+            for (int j = 0; j < allPaths.get(i).size(); j++){
+                if (j > 0){
+                    double dist = r*3;
+                    if (toKeep.size() > 0) {
+                        dist = Math.sqrt(Math.pow(allPaths.get(i).get(j)[0] - toKeep.get(toKeep.size() - 1)[0], 2) + Math.pow(allPaths.get(i).get(j)[1] - toKeep.get(toKeep.size() - 1)[1], 2));
                     }
-                    if (skip){
-                        lastPoint = allPoints.get(k);
-                        skip = false;
-                        continue;
+                    if (!(allPaths.get(i).get(j-1)[2] == 0 && allPaths.get(i).get(j)[2] == 0) && dist > r){
+                        toKeep.add(allPaths.get(i).get(j));
                     }
-                    Imgproc.line(mask, new Point(allPoints.get(k)[0], allPoints.get(k)[1]), new Point(lastPoint[0], lastPoint[1]), new Scalar(255), r);
-                    lastPoint = allPoints.get(k);
                 }
             }
-            Core.multiply(baseMask, mask, mask);
-            Mat cropped = new Mat();
-            //Mat and = new Mat(img.rows(), img.cols(), CvType.CV_8U, Scalar.all(0));
-            //Core.multiply(, mask, and);
-            img.copyTo(cropped, mask);
-            saveImage(savePath, prefix, f, pg.mat2Image(cropped));
+            allPaths.get(i).clear();
+            allPaths.get(i).addAll(toKeep);
         }
-        saveImage(savePath, prefix, frameCount, drawArray(imgArray));
+    }
+
+    public int frameLoop(int frameCount, float pointsPerFrame, Mat img, Image[] imgs, ArrayList<ArrayList<double[]>> allPaths,
+                          int pointCount, ArrayList<double[]> allPoints, String savePath, String prefix, int r, float fps){
+
+            int active = 0;
+            int past = 0;
+            int f = 0;
+            boolean skip = false;
+            double[] lastPoint = new double[3];
+
+        VideoWriter videoWriter;
+        String p = savePath + prefix + "_video.mp4";
+        videoWriter = new VideoWriter(p, VideoWriter.fourcc('x', '2','6','4'), fps, img.size());
+
+        Mat mask = new Mat(img.rows(), img.cols(), CvType.CV_8U, Scalar.all(0));
+        Mat tmp = new Mat(img.rows(), img.cols(), CvType.CV_8U, Scalar.all(0));
+        Mat baseMask = imageToMask(imgs[0]);
+        Core.multiply(baseMask, mask, mask);
+
+        for (int k = 0; k < pointCount; k++){
+            if (k-past >= allPaths.get(active).size()){
+                past += allPaths.get(active).size();
+                active++;
+                Core.multiply(baseMask, mask, mask);
+                Core.add(baseMask, imageToMask(imgs[active]), baseMask);
+            }
+
+            if (k < pointCount){
+                if (allPoints.get(k)[2] == 0){
+                    skip = true;
+                    //limit++;
+                    continue;
+                }
+                if (skip){
+                    lastPoint = allPoints.get(k);
+                    skip = false;
+                    continue;
+                }
+                Imgproc.line(mask, new Point(allPoints.get(k)[0], allPoints.get(k)[1]), new Point(lastPoint[0], lastPoint[1]), new Scalar(255), r);
+                lastPoint = allPoints.get(k);
+            }
+
+            if (k%pointsPerFrame < 1){
+                Core.multiply(baseMask, mask, tmp);
+                Mat cropped = new Mat();
+                img.copyTo(cropped, tmp);
+                if(videoWriter.isOpened()==false){
+                    videoWriter.release();
+                    throw new IllegalArgumentException("Video Writer Exception: VideoWriter not opened,"
+                            + "check parameters.");
+                }
+                //Write video
+                videoWriter.write(cropped);
+                f++;
+            }
+        }
+
+        if(videoWriter.isOpened()==false){
+            videoWriter.release();
+            throw new IllegalArgumentException("Video Writer Exception: VideoWriter not opened,"
+                    + "check parameters.");
+        }
+        //Write video
+        for (int i = 0; i < fps; i++) {
+            videoWriter.write(img);
+        }
+
+        videoWriter.release();
+        return f;
     }
 
 

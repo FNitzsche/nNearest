@@ -10,8 +10,7 @@ import org.opencv.imgproc.Imgproc;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class PathGen {
@@ -22,7 +21,11 @@ public class PathGen {
 
     public ArrayList<ArrayList<double[]>> pathGen(Image[] imgs, int r){
         ArrayList<ArrayList<double[]>> ret = new ArrayList<>();
+        HashMap<Integer, ArrayList<double[]>> tmpRet = new HashMap<>();
+        HashMap<Integer, Image> tmpImg = new HashMap<>();
+        ArrayList<int[]> areaKey = new ArrayList<>();
         for (Image img: imgs) {
+            float area = 0;
             Mat imageMatrix = imageToMat(img);
             Mat gray = new Mat(imageMatrix.rows(), imageMatrix.cols(), imageMatrix.type());
             Imgproc.cvtColor(imageMatrix, gray, Imgproc.COLOR_BGR2GRAY);
@@ -33,9 +36,24 @@ public class PathGen {
             Mat hirarchy = new Mat();
             Imgproc.findContours(binary, contours, hirarchy, Imgproc.RETR_TREE,
                     Imgproc.CHAIN_APPROX_NONE);
-            ret.add(drawPath(contours, r, hirarchy));
+            for (MatOfPoint con: contours){
+                area += Imgproc.contourArea(con, true);
+            }
+            ArrayList<double[]> list = drawPath(contours, r, hirarchy);
+            areaKey.add(new int[]{(int)area, list.hashCode()});
+            tmpRet.put(list.hashCode(), list);
+            tmpImg.put(list.hashCode(), img);
         }
-
+        Collections.sort(areaKey, new Comparator<int[]>() {
+            @Override
+            public int compare(int[] ints, int[] t1) {
+                return Integer.compare(ints[0], t1[0]);
+            }
+        });
+        for (int i = 0; i < areaKey.size(); i++){
+            ret.add(tmpRet.get(areaKey.get(i)[1]));
+            imgs[i] = tmpImg.get(areaKey.get(i)[1]);
+        }
         return ret;
     }
 
