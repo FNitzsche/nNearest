@@ -1,22 +1,22 @@
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
+import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
+import javafx.scene.image.WritablePixelFormat;
 import javafx.scene.paint.Color;
-import org.opencv.core.CvType;
-import org.opencv.core.Mat;
-import org.opencv.core.Point;
-import org.opencv.core.Scalar;
+import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 
 import javax.imageio.ImageIO;
 import java.io.File;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 public class CreateDrawAnimation {
 
     PathGen pg = new PathGen();
 
-    public void saveAnimation(String savePath, String prefix, float[][][] imgArray, int n, int frameCount, int r, int resX, int resY){
+    public void saveAnimation(String savePath, String prefix, float[][][] imgArray, int n, int frameCount, int r, int resX, int resY, float[][] centers){
         Image[] imgs = drawClusters(imgArray, n);
         ArrayList<ArrayList<double[]>> allPaths = pg.pathGen(imgs);
         ArrayList<double[]> allPoints = new ArrayList<>();
@@ -32,13 +32,24 @@ public class CreateDrawAnimation {
 
         Mat img = pg.imageToMat(drawArray(imgArray));
         float pointsPerFrame = pointCount/(float)frameCount;
+
         for (int f = 0; f < frameCount; f++){
+            int active = 0;
+            int past = 0;
             System.out.println("Frame: " + f);
             boolean skip = false;
             double[] lastPoint = new double[3];
             Mat mask = new Mat(img.rows(), img.cols(), CvType.CV_8U, Scalar.all(0));
             float limit = f*pointsPerFrame;
+            Mat baseMask = imageToMask(imgs[0]);
+            Core.multiply(baseMask, mask, mask);
             for (int k = 0; k < limit; k++){
+                if (k-past >= allPaths.get(active).size()){
+                    past += allPaths.get(active).size();
+                    active++;
+                    Core.multiply(baseMask, mask, mask);
+                    Core.add(baseMask, imageToMask(imgs[active]), baseMask);
+                }
                 if (k < pointCount){
                     if (allPoints.get(k)[2] == 0){
                         skip = true;
@@ -50,11 +61,14 @@ public class CreateDrawAnimation {
                         skip = false;
                         continue;
                     }
-                    Imgproc.line(mask, new Point(allPoints.get(k)[0], allPoints.get(k)[1]), new Point(lastPoint[0], lastPoint[1]), new Scalar(255, 255, 255), r);
+                    Imgproc.line(mask, new Point(allPoints.get(k)[0], allPoints.get(k)[1]), new Point(lastPoint[0], lastPoint[1]), new Scalar(255), r);
                     lastPoint = allPoints.get(k);
                 }
             }
+            Core.multiply(baseMask, mask, mask);
             Mat cropped = new Mat();
+            //Mat and = new Mat(img.rows(), img.cols(), CvType.CV_8U, Scalar.all(0));
+            //Core.multiply(, mask, and);
             img.copyTo(cropped, mask);
             saveImage(savePath, prefix, f, pg.mat2Image(cropped));
         }
@@ -98,6 +112,22 @@ public class CreateDrawAnimation {
             }
         }
         return wimg;
+    }
+
+    public Mat imageToMask(Image image) {
+        int width = (int) image.getWidth();
+        int height = (int) image.getHeight();
+        byte[] buffer = new byte[width * height * 4];
+
+        PixelReader reader = image.getPixelReader();
+        WritablePixelFormat<ByteBuffer> format = WritablePixelFormat.getByteBgraInstance();
+        reader.getPixels(0, 0, width, height, format, buffer, 0, width*4);
+
+        Mat mat = new Mat(height, width, CvType.CV_8UC4);
+        Mat gray = new Mat(height, width, CvType.CV_8U);
+        mat.put(0, 0, buffer);
+        Imgproc.cvtColor(mat, gray, Imgproc.COLOR_BGR2GRAY);
+        return gray;
     }
 
 }

@@ -5,6 +5,8 @@ import java.util.Random;
 
 public class NNearestN {
 
+    public static float[][] lastClusters = null;
+
     public static float[][][] cluster(float[][][] pixel, int n, int maxReps, int resX, int resY, int seed, boolean hue, float space, boolean hueCluster){
         System.out.println("Start clustering: " + n + " Clusters");
         System.out.println("for " + pixel.length + "*" + pixel[0].length + " pixel");
@@ -32,6 +34,7 @@ public class NNearestN {
 
 
         System.out.println("finished clustering");
+        lastClusters = centers;
         return pixel;
     }
 
