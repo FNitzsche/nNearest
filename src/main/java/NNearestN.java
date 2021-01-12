@@ -1,6 +1,3 @@
-import sun.swing.StringUIClientPropertyKey;
-
-import java.util.ArrayList;
 import java.util.Random;
 
 public class NNearestN {

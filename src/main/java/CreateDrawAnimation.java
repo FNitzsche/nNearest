@@ -37,7 +37,7 @@ public class CreateDrawAnimation {
 
         int lastFrame = frameLoop(frameCount, pointsPerFrame, img, imgs, allPaths, pointCount, allPoints, savePath, prefix, r, fps);
 
-        saveImage(savePath, prefix, lastFrame, drawArray(imgArray));
+        //saveImage(savePath, prefix, lastFrame, drawArray(imgArray));
     }
 
     public void cleanPaths(ArrayList<ArrayList<double[]>> allPaths, float r){
@@ -70,7 +70,7 @@ public class CreateDrawAnimation {
             double[] lastPoint = new double[3];
 
         VideoWriter videoWriter;
-        String p = savePath + prefix + "_video.mp4";
+        String p = savePath + "\\" + prefix + "_video.mp4";
         videoWriter = new VideoWriter(p, VideoWriter.fourcc('x', '2','6','4'), fps, img.size());
 
         Mat mask = new Mat(img.rows(), img.cols(), CvType.CV_8U, Scalar.all(0));

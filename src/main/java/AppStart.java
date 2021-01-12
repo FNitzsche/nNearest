@@ -19,33 +19,25 @@ public class AppStart extends Application {
     public static int resY = 1080;
     public static int n = 30;
 
+    FXMLLoad mainScreenFXML;
+
+    BaseImage base = null;
+    CreateDrawAnimation cAni = new CreateDrawAnimation();
+
     @Override
     public void start(Stage stage) throws Exception {
-
-        Canvas canvas = new Canvas(resX, resY);
-        BaseImage base;// = new BaseImage("C:\\Users\\felix\\IdeaProjects\\nNearest\\src\\main\\resources\\DSC_3545.JPG", 1920, 1080);
-        stage.setScene(new Scene(new HBox(canvas)));
+        mainScreenFXML = new FXMLLoad("MainScreen.fxml", new MainScreenCon(stage, this));
+        stage.setScene(mainScreenFXML.getScene());
         stage.show();
 
-        //for (int i = 0; i < 30; i++) {
-            base = new BaseImage("C:\\Users\\felix\\IdeaProjects\\nNearest\\src\\main\\resources\\DSCPDC_0003_BURST20200917142311023_COVER.JPG", resX, resY);
-            float[][][] imgArray = base.preSize;
-            float[][] centers = null;
-            imgArray = NNearestN.cluster(imgArray, n, 5, imgArray.length, imgArray[0].length, 0, false, 0.25f, false);
-            centers = NNearestN.lastClusters;
-            Image img = drawArray(imgArray);
-            canvas.getGraphicsContext2D().drawImage(img, 0, 0);
+        /*base = new BaseImage("C:\\Users\\felix\\IdeaProjects\\nNearest\\src\\main\\resources\\DSCPDC_0003_BURST20200917142311023_COVER.JPG", resX, resY);
+        float[][][] imgArray = base.preSize;
+        float[][] centers = null;
+        imgArray = NNearestN.cluster(imgArray, n, 5, imgArray.length, imgArray[0].length, 0, false, 0.25f, false);
+        centers = NNearestN.lastClusters;
+        Image img = drawArray(imgArray);
+        canvas.getGraphicsContext2D().drawImage(img, 0, 0);*/
 
-            /*String p = "C:\\Users\\felix\\IdeaProjects\\nNearest\\processedImg\\" + "single 3";
-            File file = new File(p + ".png");
-            try {
-                ImageIO.write(SwingFXUtils.fromFXImage(img, null), "png", file);
-            } catch (Exception s) {
-                System.out.println(s);
-            }*/
-        //}
-        CreateDrawAnimation cAni = new CreateDrawAnimation();
-        cAni.saveAnimation("C:\\Users\\felix\\IdeaProjects\\nNearest\\processedImg\\", "drawing3_", imgArray, n, 1000, 20, resX, resY, centers, 30);
 
     }
 

@@ -22,7 +22,7 @@ public class BaseImage{
     }
 
 
-    private boolean loadImage(int preResX, int preResY){
+    public boolean loadImage(int preResX, int preResY){
         Image tmp = null;
         Image tmpP = null;
         try {
@@ -69,7 +69,7 @@ public class BaseImage{
         return path.substring(path.lastIndexOf('\\'), path.length());
     }
 
-    public Image showImage(boolean fullRun, int resX, int resY, float delta) {
+    public Image showImage(boolean fullRun) {
         if (!preview.isError() && !original.isError()) {
             if (!fullRun) {
                 return preview;
