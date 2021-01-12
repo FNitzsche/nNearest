@@ -23,7 +23,7 @@ public class CreateDrawAnimation {
         int pointCount = 0;
         for (ArrayList<double[]> path: allPaths){
             for (double[] point: path){
-                if (point[2] == 1){
+                if (point[2] == 1 || point[2] == 0){
                     pointCount++;
                 }
             }
@@ -53,7 +53,7 @@ public class CreateDrawAnimation {
                 if (k < pointCount){
                     if (allPoints.get(k)[2] == 0){
                         skip = true;
-                        limit++;
+                        //limit++;
                         continue;
                     }
                     if (skip){
@@ -72,7 +72,7 @@ public class CreateDrawAnimation {
             img.copyTo(cropped, mask);
             saveImage(savePath, prefix, f, pg.mat2Image(cropped));
         }
-
+        saveImage(savePath, prefix, frameCount, drawArray(imgArray));
     }
 
 

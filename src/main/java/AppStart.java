@@ -25,10 +25,10 @@ public class AppStart extends Application {
         stage.show();
 
         //for (int i = 0; i < 30; i++) {
-            base = new BaseImage("C:\\Users\\felix\\IdeaProjects\\nNearest\\src\\main\\resources\\DSC_3545.JPG", 1280, 720);
+            base = new BaseImage("C:\\Users\\felix\\IdeaProjects\\nNearest\\src\\main\\resources\\DSC_3461.JPG", 1280, 720);
             float[][][] imgArray = base.preSize;
             float[][] centers = null;
-            imgArray = NNearestN.cluster(imgArray, 5, 5, imgArray.length, imgArray[0].length, 0, false, 0.1f, false);
+            imgArray = NNearestN.cluster(imgArray, 10, 5, imgArray.length, imgArray[0].length, 0, false, 0.1f, false);
             centers = NNearestN.lastClusters;
             Image img = drawArray(imgArray);
             canvas.getGraphicsContext2D().drawImage(img, 0, 0);
@@ -42,7 +42,7 @@ public class AppStart extends Application {
             }*/
         //}
         CreateDrawAnimation cAni = new CreateDrawAnimation();
-        cAni.saveAnimation("C:\\Users\\felix\\IdeaProjects\\nNearest\\processedImg\\", "drawing", imgArray, 5, 500, 10, 1280, 720, centers);
+        cAni.saveAnimation("C:\\Users\\felix\\IdeaProjects\\nNearest\\processedImg\\", "drawing", imgArray, 10, 500, 10, 1280, 720, centers);
 
     }
 
