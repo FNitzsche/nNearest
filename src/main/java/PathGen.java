@@ -71,6 +71,7 @@ public class PathGen {
                 second = first;
                 first = tmp;
             }
+            Collections.reverse(second);
             if (first.size() > 0 && second.size() > 0){
                 //System.out.println(first.size()-second.size());
                 boolean running = true;

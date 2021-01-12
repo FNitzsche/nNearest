@@ -28,7 +28,7 @@ public class AppStart extends Application {
             base = new BaseImage("C:\\Users\\felix\\IdeaProjects\\nNearest\\src\\main\\resources\\DSCPDC_0003_BURST20200917142311023_COVER.JPG", 1280, 720);
             float[][][] imgArray = base.preSize;
             float[][] centers = null;
-            imgArray = NNearestN.cluster(imgArray, 10, 5, imgArray.length, imgArray[0].length, 0, false, 0.1f, false);
+            imgArray = NNearestN.cluster(imgArray, 30, 5, imgArray.length, imgArray[0].length, 0, false, 0.25f, false);
             centers = NNearestN.lastClusters;
             Image img = drawArray(imgArray);
             canvas.getGraphicsContext2D().drawImage(img, 0, 0);
@@ -42,7 +42,7 @@ public class AppStart extends Application {
             }*/
         //}
         CreateDrawAnimation cAni = new CreateDrawAnimation();
-        cAni.saveAnimation("C:\\Users\\felix\\IdeaProjects\\nNearest\\processedImg\\", "drawing3_", imgArray, 10, 1000, 30, 1280, 720, centers, 30);
+        cAni.saveAnimation("C:\\Users\\felix\\IdeaProjects\\nNearest\\processedImg\\", "drawing3_", imgArray, 30, 1000, 20, 1280, 720, centers, 30);
 
     }
 

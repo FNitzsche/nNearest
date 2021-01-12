@@ -41,7 +41,7 @@ public class CreateDrawAnimation {
     }
 
     public void cleanPaths(ArrayList<ArrayList<double[]>> allPaths, float r){
-        r /= 2;
+        r = Math.min(r/3, 5);
         for (int i = 0; i < allPaths.size(); i++){
             ArrayList<double[]> toKeep = new ArrayList<>();
             for (int j = 0; j < allPaths.get(i).size(); j++){
