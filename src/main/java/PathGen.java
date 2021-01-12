@@ -20,7 +20,7 @@ public class PathGen {
         System.loadLibrary( Core.NATIVE_LIBRARY_NAME );
     }
 
-    public ArrayList<ArrayList<double[]>> pathGen(Image[] imgs){
+    public ArrayList<ArrayList<double[]>> pathGen(Image[] imgs, int r){
         ArrayList<ArrayList<double[]>> ret = new ArrayList<>();
         for (Image img: imgs) {
             Mat imageMatrix = imageToMat(img);
@@ -32,8 +32,8 @@ public class PathGen {
             List<MatOfPoint> contours = new ArrayList<>();
             Mat hirarchy = new Mat();
             Imgproc.findContours(binary, contours, hirarchy, Imgproc.RETR_TREE,
-                    Imgproc.CHAIN_APPROX_SIMPLE);
-            ret.add(drawPath(contours, 10, hirarchy));
+                    Imgproc.CHAIN_APPROX_NONE);
+            ret.add(drawPath(contours, r, hirarchy));
         }
 
         return ret;

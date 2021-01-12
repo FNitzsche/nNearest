@@ -18,7 +18,7 @@ public class CreateDrawAnimation {
 
     public void saveAnimation(String savePath, String prefix, float[][][] imgArray, int n, int frameCount, int r, int resX, int resY, float[][] centers){
         Image[] imgs = drawClusters(imgArray, n);
-        ArrayList<ArrayList<double[]>> allPaths = pg.pathGen(imgs);
+        ArrayList<ArrayList<double[]>> allPaths = pg.pathGen(imgs, r);
         ArrayList<double[]> allPoints = new ArrayList<>();
         int pointCount = 0;
         for (ArrayList<double[]> path: allPaths){
