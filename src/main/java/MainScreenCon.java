@@ -25,6 +25,7 @@ import java.nio.charset.StandardCharsets;
 public class MainScreenCon {
 
     FileChooser fileChooser = new FileChooser();
+    FileChooser saveAniChooser = new FileChooser();
     Stage stage;
     AppStart app;
 
@@ -38,6 +39,10 @@ public class MainScreenCon {
     Button preview;
     @FXML
     Button previewAni;
+    @FXML
+    Button saveImg;
+    @FXML
+    Button saveAni;
 
     @FXML
     TextField n;
@@ -70,6 +75,9 @@ public class MainScreenCon {
     public MainScreenCon(Stage stage, AppStart app){
         this.stage = stage;
         this.app = app;
+
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.JPEG"));
+        saveAniChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Animation", "*.mp4"));
     }
 
     public void initialize(){
@@ -90,8 +98,11 @@ public class MainScreenCon {
             originalC.getGraphicsContext2D().drawImage(app.base.preview, 0, 0, originalC.getWidth(), originalC.getHeight());
         });
 
-        preview.setOnAction(t -> render(System.getProperty("user.dir"), "previewVideo", false));
-        previewAni.setOnAction(t -> showAnimation(System.getProperty("user.dir"), "previewVideo"));
+        preview.setOnAction(t -> render(System.getProperty("user.dir"), "previewVideo_video.mp4", false));
+        previewAni.setOnAction(t -> showAnimation(System.getProperty("user.dir"), "previewVideo_video.mp4"));
+
+        saveImg.setOnAction(t -> saveImg());
+        saveAni.setOnAction(t -> saveAni());
 
     }
 
@@ -101,12 +112,9 @@ public class MainScreenCon {
         if ((changed || forceRender) && app.base.loaded) {
             changed = false;
             parseInputs();
-            app.base.loadImage(resXi, resYi);
             originalC.getGraphicsContext2D().drawImage(app.base.preview, 0, 0, originalC.getWidth(), originalC.getHeight());
-            float[][][] imgArray = app.base.preSize;
+            float[][][] imgArray = clusterImg();
             float[][] centers = null;
-            imgArray = NNearestN.cluster(imgArray, nI, repsI, imgArray.length, imgArray[0].length,
-                    seedI, hue.isSelected(), spaceI, clusterHue.isSelected());
             centers = NNearestN.lastClusters;
             Image img = app.drawArray(imgArray);
             finished.getGraphicsContext2D().drawImage(img, 0, 0, originalC.getWidth(), originalC.getHeight());
@@ -123,11 +131,19 @@ public class MainScreenCon {
         }
     }
 
+    public float[][][] clusterImg(){
+        app.base.loadImage(resXi, resYi);
+        float[][][] imgArray = app.base.preSize;
+        imgArray = NNearestN.cluster(imgArray, nI, repsI, imgArray.length, imgArray[0].length,
+                seedI, hue.isSelected(), spaceI, clusterHue.isSelected());
+        return imgArray;
+    }
+
     public void showAnimation(String path, String prefix){
         if(Desktop.isDesktopSupported()){
             Desktop desktop = Desktop.getDesktop();
             try {
-                String p = path + "\\" + prefix + "_video.mp4";
+                String p = path + "\\" + prefix;
                 File file = new File(p);
                 desktop.open(file);
             } catch (IOException e) {
@@ -238,6 +254,23 @@ public class MainScreenCon {
                 }
             });
         };
+    }
+
+    public void saveImg(){
+        String fullPath = fileChooser.showSaveDialog(stage).getAbsolutePath();
+        String path = fullPath.substring(0, fullPath.lastIndexOf("\\"));
+        String prefix = fullPath.substring(fullPath.lastIndexOf("\\")+1);
+        parseInputs();
+        app.cAni.saveImage(path, prefix, app.drawArray(clusterImg()));
+
+    }
+
+    public void saveAni(){
+        String fullPath = saveAniChooser.showSaveDialog(stage).getAbsolutePath();
+        String path = fullPath.substring(0, fullPath.lastIndexOf("\\"));
+        String prefix = fullPath.substring(fullPath.lastIndexOf("\\")+1);
+        render(path, prefix, true);
+
     }
 
 }

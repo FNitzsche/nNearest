@@ -70,7 +70,7 @@ public class CreateDrawAnimation {
             double[] lastPoint = new double[3];
 
         VideoWriter videoWriter;
-        String p = savePath + "\\" + prefix + "_video.mp4";
+        String p = savePath + "\\" + prefix;
         videoWriter = new VideoWriter(p, VideoWriter.fourcc('x', '2','6','4'), fps, img.size());
 
         Mat mask = new Mat(img.rows(), img.cols(), CvType.CV_8U, Scalar.all(0));
@@ -128,9 +128,9 @@ public class CreateDrawAnimation {
     }
 
 
-    public void saveImage(String path, String prefix, int f, Image img){
-        String p = path + prefix + f;
-        File file = new File(p + ".png");
+    public void saveImage(String path, String prefix, Image img){
+        String p = path + "\\" + prefix;
+        File file = new File(p);
         try {
             ImageIO.write(SwingFXUtils.fromFXImage(img, null), "png", file);
         } catch (Exception s) {
