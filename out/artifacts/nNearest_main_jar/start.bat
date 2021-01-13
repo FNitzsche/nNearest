@@ -1,0 +1,1 @@
+java -Xmx6G -Djava.library.path=E:\Download\opencv\opencv\build\java\x64 -jar nNearest.main.jar
