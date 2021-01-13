@@ -24,8 +24,8 @@ public class MainScreenCon {
     AppStart app;
 
     String loadPath = "";
-    int resXi = 1920, resYi = 1080, nI = 5, repsI = 5, framesI = 100, seedI = 0, rI = 20;
-    float spaceI = 0.3f;
+    int resXi = 1920, resYi = 1080, nI = 5, repsI = 5, framesI = 100, seedI = 0, rI = 20, minAreaI = 1000;
+    float spaceI = 0.3f, strokeI = 3;
 
     @FXML
     Button open;
@@ -37,6 +37,8 @@ public class MainScreenCon {
     Button saveImg;
     @FXML
     Button saveAni;
+    @FXML
+    Button previewSvg;
 
     @FXML
     TextField n;
@@ -54,6 +56,10 @@ public class MainScreenCon {
     TextField resY;
     @FXML
     TextField r;
+    @FXML
+    TextField minArea;
+    @FXML
+    TextField stroke;
 
     @FXML
     CheckBox hue;
@@ -86,6 +92,8 @@ public class MainScreenCon {
         r.setOnKeyTyped(t->changed = true);
         hue.setOnAction(t->changed = true);
         clusterHue.setOnAction(t->changed = true);
+        minArea.setOnKeyTyped(t->changed = true);
+        stroke.setOnKeyTyped(t->changed = true);
 
         open.setOnAction(t -> {
             app.base = new BaseImage(fileChooser.showOpenDialog(stage).getAbsolutePath(), resXi, resYi);
@@ -94,6 +102,7 @@ public class MainScreenCon {
 
         preview.setOnAction(t -> render(System.getProperty("user.dir"), "previewVideo_video.mp4", false));
         previewAni.setOnAction(t -> showAnimation(System.getProperty("user.dir"), "previewVideo_video.mp4"));
+        previewSvg.setOnAction(t -> showSvg(System.getProperty("user.dir"), "previewVideo_video.svg"));
 
         saveImg.setOnAction(t -> saveImg());
         saveAni.setOnAction(t -> saveAni());
@@ -113,7 +122,7 @@ public class MainScreenCon {
             Image img = app.drawArray(imgArray);
             finished.getGraphicsContext2D().drawImage(img, 0, 0, originalC.getWidth(), originalC.getHeight());
             ArrayList<ArrayList<double[]>> allPaths = app.cAni.saveAnimation(path, prefix, imgArray, nI, framesI, rI, resXi, resYi, centers, 30);
-            ExportSVG.exportSVG(allPaths, path, prefix, rI, resXi, resYi, centers, true, app.cAni.images, app.cAni.imgs);
+            ExportSVG.exportSVG(allPaths, path, prefix, rI, resXi, resYi, centers, true, app.cAni.images, app.cAni.imgs, minAreaI, strokeI);
         } else if (!app.base.loaded){
             Platform.runLater(new Runnable() {
                 public void run() {
@@ -146,6 +155,26 @@ public class MainScreenCon {
                     public void run() {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Animation not Found");
+                        alert.setHeaderText("Please render first.");
+                        alert.showAndWait();
+                    }
+                });
+            }
+        }
+    }
+
+    public void showSvg(String path, String prefix){
+        if(Desktop.isDesktopSupported()){
+            Desktop desktop = Desktop.getDesktop();
+            try {
+                String p = path + "\\" + prefix;
+                File file = new File(p);
+                desktop.open(file);
+            } catch (IOException e) {
+                Platform.runLater(new Runnable() {
+                    public void run() {
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Svg not Found");
                         alert.setHeaderText("Please render first.");
                         alert.showAndWait();
                     }
@@ -249,6 +278,33 @@ public class MainScreenCon {
                 }
             });
         };
+        try {
+            minAreaI = Integer.parseInt(minArea.getText());
+        } catch (NumberFormatException e){
+            minAreaI = 1000;
+            Platform.runLater(new Runnable() {
+                public void run() {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Invalid simplify Area");
+                    alert.setHeaderText("Enter a positive Integer");
+                    alert.showAndWait();
+                }
+            });
+        };
+        try {
+            strokeI = Float.parseFloat(stroke.getText());
+        } catch (NumberFormatException e){
+            strokeI = 3;
+            Platform.runLater(new Runnable() {
+                public void run() {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Invalid stroke width");
+                    alert.setHeaderText("Enter a positive Number");
+                    alert.showAndWait();
+                }
+            });
+        };
+        System.out.println("min Area: " + minAreaI);
     }
 
     public void saveImg(){

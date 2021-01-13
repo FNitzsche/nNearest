@@ -27,6 +27,7 @@
             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
@@ -35,10 +36,11 @@
         </rowConstraints>
          <children>
             <Button fx:id="open" mnemonicParsing="false" prefHeight="60.0" prefWidth="100.0" text="Open Picture" />
-            <Button fx:id="saveImg" mnemonicParsing="false" prefHeight="60.0" prefWidth="100.0" text="Save Picture" GridPane.columnIndex="3" />
-            <Button fx:id="saveAni" mnemonicParsing="false" prefHeight="60.0" prefWidth="100.0" text="Save Animation" GridPane.columnIndex="4" />
+            <Button fx:id="saveImg" mnemonicParsing="false" prefHeight="60.0" prefWidth="100.0" text="Save Picture" GridPane.columnIndex="4" />
+            <Button fx:id="saveAni" mnemonicParsing="false" prefHeight="60.0" prefWidth="100.0" text="Save Animation" GridPane.columnIndex="5" />
             <Button fx:id="preview" mnemonicParsing="false" prefHeight="60.0" prefWidth="100.0" text="Render Preview" GridPane.columnIndex="1" />
             <Button fx:id="previewAni" mnemonicParsing="false" prefHeight="60.0" prefWidth="120.0" text="Preview Animation" GridPane.columnIndex="2" />
+            <Button fx:id="previewSvg" mnemonicParsing="false" prefHeight="60.0" prefWidth="120.0" text="Preview Svg" GridPane.columnIndex="3" />
          </children>
       </GridPane>
       <TabPane GridPane.rowIndex="2">
@@ -66,6 +68,7 @@
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
@@ -122,6 +125,18 @@
                </GridPane.margin>
             </Label>
             <TextField fx:id="r" text="20" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+            <TextField fx:id="minArea" text="1000" GridPane.rowIndex="4" />
+            <Label text="svg simplification Area" GridPane.columnIndex="1" GridPane.rowIndex="4">
+               <padding>
+                  <Insets left="20.0" />
+               </padding>
+            </Label>
+            <TextField fx:id="stroke" text="3" GridPane.columnIndex="4" GridPane.rowIndex="4" />
+            <Label text="svg-Stroke width" GridPane.columnIndex="3" GridPane.rowIndex="4">
+               <padding>
+                  <Insets right="20.0" />
+               </padding>
+            </Label>
          </children>
       </GridPane>
    </children>

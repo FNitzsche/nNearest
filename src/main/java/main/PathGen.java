@@ -64,10 +64,10 @@ public class PathGen {
 
     public ArrayList<double[]> drawPath(List<MatOfPoint> contours, int r, Mat hirarchy){
         ArrayList<double[]> path = new ArrayList<>();
-        path.add(new double[]{0, 0, 0});
+        path.add(new double[]{0, 0, 0, 0});
         for (MatOfPoint contour: contours){
-            path.addAll(contour.toList().stream().map(p -> new double[] {p.x, p.y, 2}).collect(Collectors.toList()));
-            path.add(new double[]{0, 0, 0});
+            path.addAll(contour.toList().stream().map(p -> new double[] {p.x, p.y, 2, Imgproc.contourArea(contour)}).collect(Collectors.toList()));
+            path.add(new double[]{0, 0, 0, 0});
             ArrayList<Point> first = new ArrayList<>(contour.toList().subList(0,contour.toList().size()/2 ));
             ArrayList<Point> second = new ArrayList<>(contour.toList());
             second.removeAll(first);
@@ -94,13 +94,13 @@ public class PathGen {
                         float dist = (float) Math.sqrt(Math.pow(p.x-q.x, 2) + Math.pow(p.y-q.y, 2));
                         float t = (i*r)/dist;
                         if (t >= 1){
-                            path.add(new double[]{0, 0, 0});
+                            path.add(new double[]{0, 0, 0, 0});
                         } else {
-                            path.add(new double[]{q.x+(p.x-q.x)*t, q.y+(p.y-q.y)*t, 1});
+                            path.add(new double[]{q.x+(p.x-q.x)*t, q.y+(p.y-q.y)*t, 1, 0});
                             running = true;
                         }
                     }
-                    path.add(new double[]{0, 0, 0});
+                    path.add(new double[]{0, 0, 0, 0});
                     i++;
                 }
             }
