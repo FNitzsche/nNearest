@@ -22,14 +22,6 @@ public class AppStart extends Application {
         stage.setScene(mainScreenFXML.getScene());
         stage.show();
 
-        /*base = new main.BaseImage("C:\\Users\\felix\\IdeaProjects\\nNearest\\src\\main\\resources\\DSCPDC_0003_BURST20200917142311023_COVER.JPG", resX, resY);
-        float[][][] imgArray = base.preSize;
-        float[][] centers = null;
-        imgArray = main.NNearestN.cluster(imgArray, n, 5, imgArray.length, imgArray[0].length, 0, false, 0.25f, false);
-        centers = main.NNearestN.lastClusters;
-        Image img = drawArray(imgArray);
-        canvas.getGraphicsContext2D().drawImage(img, 0, 0);*/
-
 
     }
 

@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class MainScreenCon {
 
@@ -111,7 +112,8 @@ public class MainScreenCon {
             centers = NNearestN.lastClusters;
             Image img = app.drawArray(imgArray);
             finished.getGraphicsContext2D().drawImage(img, 0, 0, originalC.getWidth(), originalC.getHeight());
-            app.cAni.saveAnimation(path, prefix, imgArray, nI, framesI, rI, resXi, resYi, centers, 30);
+            ArrayList<ArrayList<double[]>> allPaths = app.cAni.saveAnimation(path, prefix, imgArray, nI, framesI, rI, resXi, resYi, centers, 30);
+            ExportSVG.exportSVG(allPaths, path, prefix, rI, resXi, resYi, centers, true, app.cAni.images, app.cAni.imgs);
         } else if (!app.base.loaded){
             Platform.runLater(new Runnable() {
                 public void run() {

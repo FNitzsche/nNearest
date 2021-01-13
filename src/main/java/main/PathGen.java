@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 
 public class PathGen {
 
+
+
     public PathGen(){
         System.loadLibrary( Core.NATIVE_LIBRARY_NAME );
     }
@@ -26,6 +28,7 @@ public class PathGen {
         HashMap<Integer, ArrayList<double[]>> tmpRet = new HashMap<>();
         HashMap<Integer, Image> tmpImg = new HashMap<>();
         ArrayList<int[]> areaKey = new ArrayList<>();
+        int k = 0;
         for (Image img: imgs) {
             float area = 0;
             Mat imageMatrix = imageToMat(img);
@@ -63,7 +66,7 @@ public class PathGen {
         ArrayList<double[]> path = new ArrayList<>();
         path.add(new double[]{0, 0, 0});
         for (MatOfPoint contour: contours){
-            path.addAll(contour.toList().stream().map(p -> new double[] {p.x, p.y, 1}).collect(Collectors.toList()));
+            path.addAll(contour.toList().stream().map(p -> new double[] {p.x, p.y, 2}).collect(Collectors.toList()));
             path.add(new double[]{0, 0, 0});
             ArrayList<Point> first = new ArrayList<>(contour.toList().subList(0,contour.toList().size()/2 ));
             ArrayList<Point> second = new ArrayList<>(contour.toList());

@@ -14,20 +14,25 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class CreateDrawAnimation {
 
     PathGen pg = new PathGen();
+    ArrayList<Image> images = new ArrayList<>();
+    Image[] imgs;
 
-    public void saveAnimation(String savePath, String prefix, float[][][] imgArray, int n, int frameCount, int r, int resX, int resY, float[][] centers, float fps){
-        Image[] imgs = drawClusters(imgArray, n);
+    public ArrayList<ArrayList<double[]>> saveAnimation(String savePath, String prefix, float[][][] imgArray, int n, int frameCount, int r, int resX, int resY, float[][] centers, float fps){
+        imgs = drawClusters(imgArray, n);
+        images.clear();
+        images.addAll(Arrays.asList(imgs));
         ArrayList<ArrayList<double[]>> allPaths = pg.pathGen(imgs, r);
         cleanPaths(allPaths, r);
         ArrayList<double[]> allPoints = new ArrayList<>();
         int pointCount = 0;
         for (ArrayList<double[]> path: allPaths){
             for (double[] point: path){
-                if (point[2] == 1 || point[2] == 0){
+                if (point[2] == 1 || point[2] == 0 || point[2] == 2){
                     pointCount++;
                 }
             }
@@ -40,6 +45,7 @@ public class CreateDrawAnimation {
         int lastFrame = frameLoop(frameCount, pointsPerFrame, img, imgs, allPaths, pointCount, allPoints, savePath, prefix, r, fps);
 
         //saveImage(savePath, prefix, lastFrame, drawArray(imgArray));
+        return allPaths;
     }
 
     public void cleanPaths(ArrayList<ArrayList<double[]>> allPaths, float r){
