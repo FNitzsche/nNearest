@@ -14,46 +14,74 @@ public class ExportSVG {
         try (PrintWriter out = new PrintWriter(p)) {
             out.println("<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"" + resX + "\" height=\"" + resY + "\">");
 
+            int c = 0;
             for (int i = 0; i < allPaths.size(); i++){
-                writeCluster(out, allPaths, r, centers, simplified, i, images, imgs);
+               c +=  writeCluster(out, allPaths, r, centers, simplified, i, images, imgs);
             }
-
+            System.out.println("Pfade: " + c);
             out.println("</svg>");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
 
-    public static void writeCluster(PrintWriter out, ArrayList<ArrayList<double[]>> allPaths, int r, float[][] centers, boolean simplified, int i, ArrayList<Image> images, Image[] imgs){
+    public static int writeCluster(PrintWriter out, ArrayList<ArrayList<double[]>> allPaths, int r, float[][] centers, boolean simplified, int i, ArrayList<Image> images, Image[] imgs){
         ArrayList<double[]> activePath = allPaths.get(i);
         float[] activeCluster = centers[images.indexOf(imgs[i])];
 
         int pos = 0;
-        ArrayList<double[]> coPath = new ArrayList<>();
-        for (double[] point: activePath){
-            //System.out.println(point[2]);
-            if (coPath.size() == 0){
-                coPath.add(point);
-            } else if (point[2] == coPath.get(coPath.size()-1)[2]){
-                //System.out.println("added");
-                coPath.add(point);
-            } else {
-                if (coPath.get(0)[2] == 1){
-                    if (!simplified){
+        if (!simplified){
+            ArrayList<double[]> coPath = new ArrayList<>();
+            for (double[] point: activePath) {
+                //System.out.println(point[2]);
+                if (coPath.size() == 0) {
+                    coPath.add(point);
+                } else if (point[2] == coPath.get(coPath.size() - 1)[2]) {
+                    //System.out.println("added");
+                    coPath.add(point);
+                } else {
+                    if (coPath.get(0)[2] == 1 && coPath.size() > 1) {
 
+                    } else if (coPath.get(0)[2] == 2 && coPath.size() > 1) {
+                        out.println("<path d=\"");
+                        drawContour(out, coPath, activeCluster, simplified, r);
+                        out.println("stroke = \"black\" stroke-width=\"" + ((r/4)+1) + "\"");
+                        out.println("/>");
+                        pos++;
                     }
-                } else if (coPath.get(0)[2] == 2){
-                    drawContour(out, coPath, activeCluster, simplified, r);
+                    coPath.clear();
+                    coPath.add(point);
                 }
-                coPath.clear();
-                coPath.add(point);
             }
+        } else {
+            ArrayList<double[]> coPath = new ArrayList<>();
+            out.println("<path d=\"");
+            for (double[] point: activePath) {
+                //System.out.println(point[2]);
+                if (coPath.size() == 0) {
+                    coPath.add(point);
+                } else if (point[2] == coPath.get(coPath.size() - 1)[2]) {
+                    //System.out.println("added");
+                    coPath.add(point);
+                } else {
+                    if (coPath.get(0)[2] == 2 && coPath.size() > 2) {
+                        drawContour(out, coPath, activeCluster, simplified, r);
+                    }
+                    coPath.clear();
+                    coPath.add(point);
+                }
+            }
+            out.println("\"");
+            out.println("stroke = \"black\" stroke-width=\"" + ((r/4)+1) + "\"");
+            out.println("fill = \"" + toRGBCode(Color.color(activeCluster[0], activeCluster[1], activeCluster[2])) + "\"");
+            out.println("/>");
+            pos++;
         }
-
+        return pos;
     }
 
     public static void drawContour(PrintWriter out, ArrayList<double[]> contour, float[] activeCluster, boolean simplified, int r){
-        out.println("<path d=\" M " + contour.get(0)[0] + "," + contour.get(0)[1] + " L ");
+        out.println("M " + contour.get(0)[0] + "," + contour.get(0)[1] + " L ");
 
         StringBuilder line = new StringBuilder();
 
@@ -61,12 +89,7 @@ public class ExportSVG {
             line.append(" ").append(contour.get(i)[0]).append(",").append(contour.get(i)[1]);
         }
         out.println(line);
-        out.println("\"");
-        out.println("stroke = \"black\" stroke-width=\"" + ((r/4)+1) + "\"");
-        if (simplified){
-            out.println("fill = \"" + toRGBCode(Color.color(activeCluster[0], activeCluster[1], activeCluster[2])) + "\"");
-        }
-        out.println("/>");
+
     }
 
     public static String toRGBCode( Color color )
