@@ -65,6 +65,8 @@ public class MainScreenCon {
     CheckBox hue;
     @FXML
     CheckBox clusterHue;
+    @FXML
+    CheckBox reverse;
 
     @FXML
     Canvas originalC;
@@ -94,6 +96,7 @@ public class MainScreenCon {
         clusterHue.setOnAction(t->changed = true);
         minArea.setOnKeyTyped(t->changed = true);
         stroke.setOnKeyTyped(t->changed = true);
+        reverse.setOnAction(t-> changed = true);
 
         open.setOnAction(t -> {
             app.base = new BaseImage(fileChooser.showOpenDialog(stage).getAbsolutePath(), resXi, resYi);
@@ -121,7 +124,7 @@ public class MainScreenCon {
             centers = NNearestN.lastClusters;
             Image img = app.drawArray(imgArray);
             finished.getGraphicsContext2D().drawImage(img, 0, 0, originalC.getWidth(), originalC.getHeight());
-            ArrayList<ArrayList<double[]>> allPaths = app.cAni.saveAnimation(path, prefix, imgArray, nI, framesI, rI, resXi, resYi, centers, 30);
+            ArrayList<ArrayList<double[]>> allPaths = app.cAni.saveAnimation(path, prefix, imgArray, nI, framesI, rI, resXi, resYi, centers, 30, reverse.isSelected());
             ExportSVG.exportSVG(allPaths, path, prefix, rI, resXi, resYi, centers, true, app.cAni.images, app.cAni.imgs, minAreaI, strokeI);
         } else if (!app.base.loaded){
             Platform.runLater(new Runnable() {

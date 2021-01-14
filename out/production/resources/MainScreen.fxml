@@ -137,6 +137,7 @@
                   <Insets right="20.0" />
                </padding>
             </Label>
+            <CheckBox fx:id="reverse" mnemonicParsing="false" text="Reverse Painting" GridPane.columnIndex="2" GridPane.rowIndex="4" />
          </children>
       </GridPane>
    </children>

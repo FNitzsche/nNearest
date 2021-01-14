@@ -23,7 +23,7 @@ public class PathGen {
         System.loadLibrary( Core.NATIVE_LIBRARY_NAME );
     }
 
-    public ArrayList<ArrayList<double[]>> pathGen(Image[] imgs, int r){
+    public ArrayList<ArrayList<double[]>> pathGen(Image[] imgs, int r, boolean reverse){
         ArrayList<ArrayList<double[]>> ret = new ArrayList<>();
         HashMap<Integer, ArrayList<double[]>> tmpRet = new HashMap<>();
         HashMap<Integer, Image> tmpImg = new HashMap<>();
@@ -55,6 +55,9 @@ public class PathGen {
                 return Integer.compare(ints[0], t1[0]);
             }
         });
+        if (reverse){
+            Collections.reverse(areaKey);
+        }
         for (int i = 0; i < areaKey.size(); i++){
             ret.add(tmpRet.get(areaKey.get(i)[1]));
             imgs[i] = tmpImg.get(areaKey.get(i)[1]);

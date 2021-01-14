@@ -22,11 +22,11 @@ public class CreateDrawAnimation {
     ArrayList<Image> images = new ArrayList<>();
     Image[] imgs;
 
-    public ArrayList<ArrayList<double[]>> saveAnimation(String savePath, String prefix, float[][][] imgArray, int n, int frameCount, int r, int resX, int resY, float[][] centers, float fps){
+    public ArrayList<ArrayList<double[]>> saveAnimation(String savePath, String prefix, float[][][] imgArray, int n, int frameCount, int r, int resX, int resY, float[][] centers, float fps, boolean reverse){
         imgs = drawClusters(imgArray, n);
         images.clear();
         images.addAll(Arrays.asList(imgs));
-        ArrayList<ArrayList<double[]>> allPaths = pg.pathGen(imgs, r);
+        ArrayList<ArrayList<double[]>> allPaths = pg.pathGen(imgs, r, reverse);
         cleanPaths(allPaths, r);
         ArrayList<double[]> allPoints = new ArrayList<>();
         int pointCount = 0;
