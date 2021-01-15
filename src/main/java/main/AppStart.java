@@ -5,6 +5,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.opencv.core.Core;
 
 public class AppStart extends Application {
     public static int resX = 1980;
@@ -18,6 +19,7 @@ public class AppStart extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        System.loadLibrary( Core.NATIVE_LIBRARY_NAME );
         mainScreenFXML = new FXMLLoad("/MainScreen.fxml", new MainScreenCon(stage, this));
         stage.setScene(mainScreenFXML.getScene());
         stage.show();

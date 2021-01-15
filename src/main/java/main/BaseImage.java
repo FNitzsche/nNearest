@@ -3,6 +3,7 @@ package main;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
+import org.opencv.imgproc.Imgproc;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -12,6 +13,8 @@ public class BaseImage{
     Image original;
     Image preview;
     String path;
+
+    CalculateFeatures cf;
 
     float[][][] fullSize;
     float[][][] preSize;
@@ -41,7 +44,8 @@ public class BaseImage{
             original = tmp;
             preview = tmpP;
         }
-        preSize = imgToArray(preview);
+        cf = new CalculateFeatures(preview);
+        preSize = cf.calculateFeatures(null);
         fullSize = imgToArray(original);
         return true;
     }

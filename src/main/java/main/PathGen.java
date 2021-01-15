@@ -20,7 +20,7 @@ public class PathGen {
 
 
     public PathGen(){
-        System.loadLibrary( Core.NATIVE_LIBRARY_NAME );
+
     }
 
     public ArrayList<ArrayList<double[]>> pathGen(Image[] imgs, int r, boolean reverse){

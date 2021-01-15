@@ -3,9 +3,8 @@ package main;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
@@ -25,7 +24,7 @@ public class MainScreenCon {
 
     String loadPath = "";
     int resXi = 1920, resYi = 1080, nI = 5, repsI = 5, framesI = 100, seedI = 0, rI = 20, minAreaI = 1000;
-    float spaceI = 0.3f, strokeI = 3;
+    float strokeI = 3;
 
     @FXML
     Button open;
@@ -51,8 +50,6 @@ public class MainScreenCon {
     @FXML
     TextField seed;
     @FXML
-    TextField space;
-    @FXML
     TextField resY;
     @FXML
     TextField r;
@@ -73,12 +70,33 @@ public class MainScreenCon {
     @FXML
     Canvas finished;
 
+    @FXML
+    Slider rgb;
+    @FXML
+    Slider space;
+    @FXML
+    Slider distStrength;
+    @FXML
+    Slider obj;
+    @FXML
+    Slider meds;
+    @FXML
+    Slider medm;
+    @FXML
+    Slider medb;
+    @FXML
+    Slider h;
+    @FXML
+    Slider s;
+    @FXML
+    Slider v;
+
 
     public MainScreenCon(Stage stage, AppStart app){
         this.stage = stage;
         this.app = app;
 
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.JPEG"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.JPEG", "*.bmp"));
         saveAniChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Animation", "*.mp4"));
     }
 
@@ -142,7 +160,10 @@ public class MainScreenCon {
         app.base.loadImage(resXi, resYi);
         float[][][] imgArray = app.base.preSize;
         imgArray = NNearestN.cluster(imgArray, nI, repsI, imgArray.length, imgArray[0].length,
-                seedI, hue.isSelected(), spaceI, clusterHue.isSelected());
+                seedI, hue.isSelected(), (float) space.getValue(), clusterHue.isSelected(),
+                (float) rgb.getValue(), (float) distStrength.getValue(), (float) obj.getValue(), (float) meds.getValue(),
+                (float) medm.getValue(), (float) medb.getValue(), (float) h.getValue(), (float) s.getValue(), (float) v.getValue()
+                );
         return imgArray;
     }
 
@@ -264,19 +285,6 @@ public class MainScreenCon {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Invalid Stroke Width");
                     alert.setHeaderText("Enter a positive Integer");
-                    alert.showAndWait();
-                }
-            });
-        };
-        try {
-            spaceI = Float.parseFloat(space.getText());
-        } catch (NumberFormatException e){
-            repsI = 5;
-            Platform.runLater(new Runnable() {
-                public void run() {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Invalid Voronoi-Factor");
-                    alert.setHeaderText("Enter a positive Number between 0 and 2");
                     alert.showAndWait();
                 }
             });
