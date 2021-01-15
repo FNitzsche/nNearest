@@ -107,7 +107,6 @@ public class MainScreenCon {
         resX.setOnKeyTyped(t->changed = true);
         frames.setOnKeyTyped(t->changed = true);
         seed.setOnKeyTyped(t->changed = true);
-        space.setOnKeyTyped(t->changed = true);
         resY.setOnKeyTyped(t->changed = true);
         r.setOnKeyTyped(t->changed = true);
         hue.setOnAction(t->changed = true);
@@ -115,6 +114,16 @@ public class MainScreenCon {
         minArea.setOnKeyTyped(t->changed = true);
         stroke.setOnKeyTyped(t->changed = true);
         reverse.setOnAction(t-> changed = true);
+        rgb.setOnMouseReleased(t->changed = true);
+        space.setOnMouseReleased(t->changed = true);
+        distStrength.setOnMouseReleased(t->changed = true);
+        obj.setOnMouseReleased(t->changed = true);
+        meds.setOnMouseReleased(t->changed = true);
+        medm.setOnMouseReleased(t->changed = true);
+        medb.setOnMouseReleased(t->changed = true);
+        h.setOnMouseReleased(t->changed = true);
+        s.setOnMouseReleased(t->changed = true);
+        v.setOnMouseReleased(t->changed = true);
 
         open.setOnAction(t -> {
             app.base = new BaseImage(fileChooser.showOpenDialog(stage).getAbsolutePath(), resXi, resYi);
