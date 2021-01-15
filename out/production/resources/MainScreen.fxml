@@ -5,12 +5,15 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
 
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
   <columnConstraints>
@@ -55,6 +58,113 @@
                   <Canvas fx:id="finished" height="720.0" width="1280.0" />
                </content>
             </Tab>
+            <Tab closable="false" text="Cluster Settings">
+               <content>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <GridPane layoutX="361.0" layoutY="286.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" percentHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <GridPane>
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <TextField fx:id="n" text="5" />
+                                    <Label text="Number of Colors" GridPane.columnIndex="1">
+                                       <GridPane.margin>
+                                          <Insets left="10.0" />
+                                       </GridPane.margin>
+                                    </Label>
+                                    <TextField fx:id="reps" text="5" GridPane.columnIndex="2" />
+                                    <Label text="Repetitions" GridPane.columnIndex="3">
+                                       <GridPane.margin>
+                                          <Insets left="10.0" />
+                                       </GridPane.margin>
+                                    </Label>
+                                    <CheckBox fx:id="hue" mnemonicParsing="false" text="Keep Shade" GridPane.columnIndex="4" />
+                                    <CheckBox fx:id="clusterHue" mnemonicParsing="false" text="Cluster Shade" GridPane.columnIndex="5" />
+                                 </children>
+                              </GridPane>
+                              <GridPane GridPane.rowIndex="1">
+                                 <columnConstraints>
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                 </rowConstraints>
+                                 <children>
+                                    <GridPane GridPane.rowIndex="1">
+                                      <columnConstraints>
+                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints minHeight="10.0" percentHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                       <children>
+                                          <Label text="RGB" />
+                                          <Label text="Voronoi" GridPane.columnIndex="1" />
+                                          <Label text="Distance to Black" GridPane.columnIndex="2" />
+                                          <Label text="small Blur" GridPane.columnIndex="4" />
+                                          <Label text="middle Blur" GridPane.columnIndex="5" />
+                                          <Label text="big Blur" GridPane.columnIndex="6" />
+                                          <Label text="coherent Object" GridPane.columnIndex="3" />
+                                          <Label text="Hue" GridPane.columnIndex="7" />
+                                          <Label text="Saturation" GridPane.columnIndex="8" />
+                                          <Label text="Value" GridPane.columnIndex="9" />
+                                          <Slider fx:id="space" blockIncrement="1.0" majorTickUnit="1.0" max="5.0" minorTickCount="5" orientation="VERTICAL" showTickLabels="true" showTickMarks="true" value="0.2" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                          <Slider fx:id="rgb" blockIncrement="1.0" majorTickUnit="1.0" max="5.0" minorTickCount="5" orientation="VERTICAL" showTickLabels="true" showTickMarks="true" value="1.0" GridPane.rowIndex="1" />
+                                          <Slider fx:id="distStrength" blockIncrement="1.0" majorTickUnit="1.0" max="5.0" minorTickCount="5" orientation="VERTICAL" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                          <Slider fx:id="obj" blockIncrement="1.0" majorTickUnit="1.0" max="5.0" minorTickCount="5" orientation="VERTICAL" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                          <Slider fx:id="meds" blockIncrement="1.0" majorTickUnit="1.0" max="5.0" minorTickCount="5" orientation="VERTICAL" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                          <Slider fx:id="medm" blockIncrement="1.0" majorTickUnit="1.0" max="5.0" minorTickCount="5" orientation="VERTICAL" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                                          <Slider fx:id="medb" blockIncrement="1.0" majorTickUnit="1.0" max="5.0" minorTickCount="5" orientation="VERTICAL" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="6" GridPane.rowIndex="1" />
+                                          <Slider fx:id="h" blockIncrement="1.0" majorTickUnit="1.0" max="5.0" minorTickCount="5" orientation="VERTICAL" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="7" GridPane.rowIndex="1" />
+                                          <Slider fx:id="s" blockIncrement="1.0" majorTickUnit="1.0" max="5.0" minorTickCount="5" orientation="VERTICAL" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="8" GridPane.rowIndex="1" />
+                                          <Slider fx:id="v" blockIncrement="1.0" majorTickUnit="1.0" max="5.0" minorTickCount="5" orientation="VERTICAL" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="9" GridPane.rowIndex="1" />
+                                       </children>
+                                    </GridPane>
+                                    <Label text="Cluster weights:">
+                                       <padding>
+                                          <Insets left="20.0" />
+                                       </padding>
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </GridPane>
+                           </children>
+                        </GridPane>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
          </tabs>
       </TabPane>
       <GridPane GridPane.rowIndex="1">
@@ -66,78 +176,55 @@
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
         <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <TextField fx:id="n" text="5" />
-            <Label text="Number of Colors" GridPane.columnIndex="1">
+            <TextField fx:id="seed" text="0" />
+            <Label text="Seed" GridPane.columnIndex="1">
+               <GridPane.margin>
+                  <Insets left="20.0" right="20.0" />
+               </GridPane.margin>
+            </Label>
+            <TextField fx:id="resX" text="1920" GridPane.rowIndex="1" />
+            <Label text="X-Resolution" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets left="20.0" />
                </GridPane.margin>
             </Label>
-            <TextField fx:id="reps" text="5" GridPane.rowIndex="1" />
-            <TextField fx:id="seed" text="0" GridPane.columnIndex="4" />
-            <TextField fx:id="space" text="0.3" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-            <Label text="Seed" GridPane.columnIndex="3">
+            <TextField fx:id="resY" text="1080" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+            <Label text="Y-Resolution" GridPane.columnIndex="3" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets right="20.0" />
                </GridPane.margin>
             </Label>
-            <Label text="Repetitions" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <TextField fx:id="frames" text="100" GridPane.rowIndex="2" />
+            <Label text="Approx. FrameNumber" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets left="20.0" />
                </GridPane.margin>
             </Label>
-            <Label text="Voronoi-Factor" GridPane.columnIndex="3" GridPane.rowIndex="1">
+            <Label text="Stroke Width" GridPane.columnIndex="3" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets right="20.0" />
                </GridPane.margin>
             </Label>
-            <TextField fx:id="resX" text="1920" GridPane.rowIndex="2" />
-            <Label text="X-Resolution" GridPane.columnIndex="1" GridPane.rowIndex="2">
-               <GridPane.margin>
-                  <Insets left="20.0" />
-               </GridPane.margin>
-            </Label>
-            <TextField fx:id="resY" text="1080" GridPane.columnIndex="4" GridPane.rowIndex="2" />
-            <Label text="Y-Resolution" GridPane.columnIndex="3" GridPane.rowIndex="2">
-               <GridPane.margin>
-                  <Insets right="20.0" />
-               </GridPane.margin>
-            </Label>
-            <Label text="Keep Shade" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-            <Label text="Cluster Shade" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-            <CheckBox fx:id="clusterHue" mnemonicParsing="false" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-            <CheckBox fx:id="hue" mnemonicParsing="false" GridPane.columnIndex="2" />
-            <TextField fx:id="frames" text="100" GridPane.rowIndex="3" />
-            <Label text="Approx. FrameNumber" GridPane.columnIndex="1" GridPane.rowIndex="3">
-               <GridPane.margin>
-                  <Insets left="20.0" />
-               </GridPane.margin>
-            </Label>
-            <Label text="Stroke Width" GridPane.columnIndex="3" GridPane.rowIndex="3">
-               <GridPane.margin>
-                  <Insets right="20.0" />
-               </GridPane.margin>
-            </Label>
-            <TextField fx:id="r" text="20" GridPane.columnIndex="4" GridPane.rowIndex="3" />
-            <TextField fx:id="minArea" text="1000" GridPane.rowIndex="4" />
-            <Label text="svg simplification Area" GridPane.columnIndex="1" GridPane.rowIndex="4">
+            <TextField fx:id="r" text="20" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+            <TextField fx:id="minArea" text="1000" GridPane.rowIndex="3" />
+            <Label text="svg simplification Area" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <padding>
                   <Insets left="20.0" />
                </padding>
             </Label>
-            <TextField fx:id="stroke" text="3" GridPane.columnIndex="4" GridPane.rowIndex="4" />
-            <Label text="svg-Stroke width" GridPane.columnIndex="3" GridPane.rowIndex="4">
+            <TextField fx:id="stroke" text="3" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+            <Label text="svg-Stroke width" GridPane.columnIndex="3" GridPane.rowIndex="3">
                <padding>
                   <Insets right="20.0" />
                </padding>
             </Label>
-            <CheckBox fx:id="reverse" mnemonicParsing="false" text="Reverse Painting" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+            <CheckBox fx:id="reverse" mnemonicParsing="false" text="Reverse Painting" GridPane.columnIndex="4" />
          </children>
       </GridPane>
    </children>

@@ -22,7 +22,7 @@ public class CreateDrawAnimation {
     ArrayList<Image> images = new ArrayList<>();
     Image[] imgs;
 
-    public ArrayList<ArrayList<double[]>> saveAnimation(String savePath, String prefix, float[][][] imgArray, int n, int frameCount, int r, int resX, int resY, float[][] centers, float fps, boolean reverse){
+    public ArrayList<ArrayList<double[]>> saveAnimation(String savePath, String prefix, float[][][] imgArray, int n, int frameCount, int r, int resX, int resY, float[][] centers, float fps, boolean reverse, float speedCom){
         imgs = drawClusters(imgArray, n);
         images.clear();
         images.addAll(Arrays.asList(imgs));
@@ -30,19 +30,25 @@ public class CreateDrawAnimation {
         cleanPaths(allPaths, r);
         ArrayList<double[]> allPoints = new ArrayList<>();
         int pointCount = 0;
+        int contourPoints = 0;
         for (ArrayList<double[]> path: allPaths){
             for (double[] point: path){
                 if (point[2] == 1 || point[2] == 0 || point[2] == 2){
                     pointCount++;
                 }
+                if (point[2] == 2){
+                    contourPoints++;
+                }
             }
             allPoints.addAll(path);
         }
 
+        float subSpeedCom = (pointCount-(contourPoints*speedCom))/(pointCount-contourPoints);
+
         Mat img = pg.imageToMat(drawArray(imgArray));
         float pointsPerFrame = pointCount/(float)frameCount;
 
-        int lastFrame = frameLoop(frameCount, pointsPerFrame, img, imgs, allPaths, pointCount, allPoints, savePath, prefix, r, fps);
+        frameLoop(frameCount, pointsPerFrame, img, imgs, allPaths, pointCount, allPoints, savePath, prefix, r, fps, speedCom, subSpeedCom);
 
         //saveImage(savePath, prefix, lastFrame, drawArray(imgArray));
         return allPaths;
@@ -69,7 +75,7 @@ public class CreateDrawAnimation {
     }
 
     public int frameLoop(int frameCount, float pointsPerFrame, Mat img, Image[] imgs, ArrayList<ArrayList<double[]>> allPaths,
-                          int pointCount, ArrayList<double[]> allPoints, String savePath, String prefix, int r, float fps){
+                          int pointCount, ArrayList<double[]> allPoints, String savePath, String prefix, int r, float fps, float addSpeedCom, float subSpeedCom){
 
             int active = 0;
             int past = 0;
@@ -85,6 +91,8 @@ public class CreateDrawAnimation {
         Mat tmp = new Mat(img.rows(), img.cols(), CvType.CV_8U, Scalar.all(0));
         Mat baseMask = imageToMask(imgs[0]);
         Core.multiply(baseMask, mask, mask);
+
+        float makeFrame = 0;
 
         for (int k = 0; k < pointCount; k++){
             if (k-past >= allPaths.get(active).size()){
@@ -103,6 +111,11 @@ public class CreateDrawAnimation {
                 } else {
                     Imgproc.line(mask, new Point(allPoints.get(k)[0], allPoints.get(k)[1]), new Point(lastPoint[0], lastPoint[1]), new Scalar(255), r);
                     lastPoint = allPoints.get(k);
+                    if (lastPoint[2] == 2){
+                        makeFrame+= addSpeedCom;
+                    } else {
+                        makeFrame+= subSpeedCom;
+                    }
                 }
             }
 
@@ -110,7 +123,7 @@ public class CreateDrawAnimation {
                 Core.multiply(baseMask, mask, tmp);
                 Mat cropped = new Mat();
                 img.copyTo(cropped, tmp);
-                if(videoWriter.isOpened()==false){
+                if(!videoWriter.isOpened()){
                     videoWriter.release();
                     throw new IllegalArgumentException("Video Writer Exception: VideoWriter not opened,"
                             + "check parameters.");
