@@ -21,3 +21,5 @@ gradle-app.setting
 *.JPG
 *.svg
 out/artifacts/nNearest_main_jar/previewVideo_video.mp4
+
+.idea/*
